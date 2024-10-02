@@ -1,4 +1,4 @@
-package hanghaeplus.signupforlecture.api.dto.response;
+package hanghaeplus.signupforlecture.application.lecture.dto.response;
 
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 

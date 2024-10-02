@@ -5,8 +5,8 @@
    └── main   
       └── java   
          └── hanghaeplus   
-             └── signupforspeciallecture   
-                 └── speciallecture   
+             └── signupforlecture   
+                 └── lecture   
                      ├── application   
                      │   ├── dto   
                      │   └── service   

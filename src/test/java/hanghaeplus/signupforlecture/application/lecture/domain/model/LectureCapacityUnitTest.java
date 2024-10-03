@@ -18,7 +18,7 @@ class LectureCapacityUnitTest {
         int availableSlot = 10;
         LectureCapacity lectureCapacity = LectureCapacity.builder()
                 .lectureId(lectureId)
-                .lecture(lecture)
+//                .lecture(lecture)
                 .maxSlot(maxSlot)
                 .availableSlot(availableSlot)
                 .build();
@@ -40,7 +40,7 @@ class LectureCapacityUnitTest {
         int availableSlot = 30;
         LectureCapacity lectureCapacity = LectureCapacity.builder()
                 .lectureId(lectureId)
-                .lecture(lecture)
+//                .lecture(lecture)
                 .maxSlot(maxSlot)
                 .availableSlot(availableSlot)
                 .build();

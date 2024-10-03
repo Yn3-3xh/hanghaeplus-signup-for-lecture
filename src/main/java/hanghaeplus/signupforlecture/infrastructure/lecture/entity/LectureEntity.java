@@ -23,7 +23,8 @@ public class LectureEntity extends AbstractAuditable {
     @JoinColumn(name = "lecturer_id", nullable = false)
     private LecturerEntity lecturerEntity;
 
-    @OneToOne(mappedBy = "lectureEntity", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "capacity_id")
     private LectureCapacityEntity lectureCapacityEntity;
 
     private LocalDate availableDate;

@@ -1,7 +1,5 @@
 package hanghaeplus.signupforlecture.application.lecture.service;
 
-import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
-import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureCapacityRepository;
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureCapacityValidator;
 import org.junit.jupiter.api.DisplayName;
@@ -36,11 +34,11 @@ class LectureCapacityServiceUnitTest {
         // given
         Long lectureId = 1L;
 
-        when(lectureCapacityRepository.findByLectureIdGreaterThanZero(lectureId)).thenReturn(Optional.empty());
+        when(lectureCapacityRepository.findByLectureIdGreaterThanZeroLock(lectureId)).thenReturn(Optional.empty());
 
         // when
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-            sut.getAvailableSlot(lectureId);
+            sut.getAvailableSlotLock(lectureId);
         });
 
         // then

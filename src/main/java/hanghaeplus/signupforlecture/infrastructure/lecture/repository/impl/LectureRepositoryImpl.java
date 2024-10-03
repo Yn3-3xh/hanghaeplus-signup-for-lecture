@@ -38,8 +38,7 @@ public class LectureRepositoryImpl implements LectureRepository {
     }
 
     @Override
-    public Lecture save(Lecture lecture) {
-        return lectureJpaRepository.save(LectureEntity.fromDomain(lecture))
-                .toDomain();
+    public void save(Lecture lecture) {
+        lectureJpaRepository.save(LectureEntity.fromDomain(lecture));
     }
 }

@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
 @Builder
 public record LectureCapacity (
 
+    Long id,
     Long lectureId,
-    Lecture lecture,
     int maxSlot,
     int availableSlot
 ) {
@@ -18,6 +18,6 @@ public record LectureCapacity (
             throw new IllegalStateException("Slot을 신청할 수 없습니다.");
         }
 
-        return new LectureCapacity(lectureId, lecture, maxSlot, afterAvailableSlot);
+        return new LectureCapacity(id, lectureId, maxSlot, afterAvailableSlot);
     }
 }

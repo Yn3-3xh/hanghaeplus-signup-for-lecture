@@ -53,7 +53,7 @@ class LectureApplyHistoryServiceUnitTest {
                 .build();
         Optional<LectureApplyHistory> lectureApplyHistory = Optional.of(givenLectureApplyHistory);
 
-        when(lectureApplyHistoryRepository.findByLectureIdAndUserIdAndApplyStatus(lectureId, user.id()))
+        when(lectureApplyHistoryRepository.findByLectureIdAndUserIdAndAppliedStatus(lectureId, user.id()))
                 .thenReturn(lectureApplyHistory);
 
         // when

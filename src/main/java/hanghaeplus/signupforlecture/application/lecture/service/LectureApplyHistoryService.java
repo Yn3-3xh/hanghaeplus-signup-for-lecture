@@ -7,6 +7,7 @@ import hanghaeplus.signupforlecture.application.lecture.domain.repository.Lectur
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureApplyHistoryValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class LectureApplyHistoryService {
     private final LectureApplyHistoryRepository lectureApplyHistoryRepository;
     private final LectureApplyHistoryValidator lectureApplyHistoryValidator;
 
+    @Transactional(readOnly = true)
     public List<Long> findSignedUpLectureHistories(Long userId) {
         lectureApplyHistoryValidator.validateId(userId);
 
@@ -30,7 +32,7 @@ public class LectureApplyHistoryService {
     public void checkApplyLectureHistory(Long lectureId, Long userId) {
         lectureApplyHistoryValidator.validateId(lectureId, userId);
 
-        Optional<LectureApplyHistory> lectureApplyHistory = lectureApplyHistoryRepository.findByLectureIdAndUserIdAndApplyStatus(userId, lectureId);
+        Optional<LectureApplyHistory> lectureApplyHistory = lectureApplyHistoryRepository.findByLectureIdAndUserIdAndAppliedStatus(userId, lectureId);
         if (lectureApplyHistory.isPresent()) {
             throw new IllegalStateException("해당 강의에 이미 신청한 이력이 있습니다.");
         }

@@ -5,9 +5,11 @@ import hanghaeplus.signupforlecture.infrastructure.lecture.entity.LecturerEntity
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LecturerRepository;
 import hanghaeplus.signupforlecture.infrastructure.lecture.repository.jpa.LecturerJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 @RequiredArgsConstructor
 public class LecturerRepositoryImpl implements LecturerRepository {
 

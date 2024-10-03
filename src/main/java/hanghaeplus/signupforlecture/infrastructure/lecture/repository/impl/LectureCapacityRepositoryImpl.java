@@ -16,8 +16,8 @@ public class LectureCapacityRepositoryImpl implements LectureCapacityRepository 
     private final LectureCapacityJpaRepository lectureCapacityJpaRepository;
 
     @Override
-    public Optional<LectureCapacity> findByLectureIdGreaterThanZero(Long lectureId) {
-        return lectureCapacityJpaRepository.findByLectureIdGreaterThanZero(lectureId)
+    public Optional<LectureCapacity> findByLectureIdGreaterThanZeroLock(Long lectureId) {
+        return lectureCapacityJpaRepository.findByLectureIdGreaterThanZeroLock(lectureId)
                 .map(LectureCapacityEntity::toDomain);
     }
 

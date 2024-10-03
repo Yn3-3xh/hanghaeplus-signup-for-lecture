@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LectureApplyHistoryRepositoryImpl implements LectureApplyHistoryRepository {
 
-    private LectureApplyHistoryJpaRepository lectureApplyHistoryJpaRepository;
+    private final LectureApplyHistoryJpaRepository lectureApplyHistoryJpaRepository;
 
     @Override
     public List<LectureApplyHistory> getAllByUserId(Long id) {
@@ -24,13 +24,21 @@ public class LectureApplyHistoryRepositoryImpl implements LectureApplyHistoryRep
     }
 
     @Override
-    public Optional<LectureApplyHistory> findByLectureIdAndUserIdAndApplyStatus(Long lectureId, Long userId) {
-        return lectureApplyHistoryJpaRepository.findByLectureIdAndUserIdAndApplyStatus(lectureId, userId);
+    public Optional<LectureApplyHistory> findByLectureIdAndUserIdAndAppliedStatus(Long lectureId, Long userId) {
+        return lectureApplyHistoryJpaRepository.findByLectureIdAndUserIdAndAppliedStatus(lectureId, userId)
+                .map(LectureApplyHistoryEntity::toDomain);
     }
 
     @Override
     public LectureApplyHistory save(LectureApplyHistory lectureApplyHistory) {
         return lectureApplyHistoryJpaRepository.save(LectureApplyHistoryEntity.fromDomain(lectureApplyHistory))
                 .toDomain();
+    }
+
+    @Override
+    public List<LectureApplyHistory> findByLectureIdAndAppliedStatus(Long lectureId) {
+        return lectureApplyHistoryJpaRepository.findByLectureIdAndAppliedStatus(lectureId).stream()
+                .map(LectureApplyHistoryEntity::toDomain)
+                .toList();
     }
 }

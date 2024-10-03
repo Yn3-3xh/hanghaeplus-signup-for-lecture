@@ -12,12 +12,10 @@ import lombok.NoArgsConstructor;
 public class LectureCapacityEntity {
 
     @Id
-    private Long lectureId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "lecture_id")
-    private LectureEntity lectureEntity;
+    private Long lectureId;
 
     private int maxSlot;
 
@@ -25,6 +23,7 @@ public class LectureCapacityEntity {
 
     public LectureCapacity toDomain() {
         return LectureCapacity.builder()
+                .id(id)
                 .lectureId(lectureId)
                 .maxSlot(maxSlot)
                 .availableSlot(availableSlot)
@@ -33,8 +32,8 @@ public class LectureCapacityEntity {
 
     public static LectureCapacityEntity fromDomain(LectureCapacity lectureCapacity) {
         LectureCapacityEntity lectureCapacityEntity = new LectureCapacityEntity();
+        lectureCapacityEntity.id = lectureCapacity.id();
         lectureCapacityEntity.lectureId = lectureCapacity.lectureId();
-        lectureCapacityEntity.lectureEntity = LectureEntity.fromDomain(lectureCapacity.lecture());
         lectureCapacityEntity.maxSlot = lectureCapacity.maxSlot();
         lectureCapacityEntity.availableSlot = lectureCapacity.availableSlot();
 

@@ -15,10 +15,10 @@ public class LectureCapacityService {
     private final LectureCapacityRepository lectureCapacityRepository;
     private final LectureCapacityValidator lectureCapacityValidator;
 
-    public LectureCapacity getAvailableSlot(Long lectureId) {
+    public LectureCapacity getAvailableSlotLock(Long lectureId) {
         lectureCapacityValidator.validateLectureId(lectureId);
 
-        return lectureCapacityRepository.findByLectureIdGreaterThanZero(lectureId)
+        return lectureCapacityRepository.findByLectureIdGreaterThanZeroLock(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("신청 가능한 Slot이 없습니다."));
     }
 
@@ -26,6 +26,9 @@ public class LectureCapacityService {
         lectureCapacityValidator.validateLecture(lectureCapacity);
 
         LectureCapacity capacity = lectureCapacity.decreaseAvailableSlot();
+        System.out.println("가나다");
+        System.out.println(capacity.availableSlot());
+
         lectureCapacityRepository.save(capacity);
     }
 }

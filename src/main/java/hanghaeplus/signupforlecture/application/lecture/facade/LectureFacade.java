@@ -14,6 +14,7 @@ import hanghaeplus.signupforlecture.application.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
@@ -54,9 +55,12 @@ public class LectureFacade {
         try {
             lectureApplyHistoryService.checkApplyLectureHistory(lecture.id(), user.id());
 
-            LectureCapacity lectureCapacity = lectureCapacityService.getAvailableSlot(lecture.id());
+            // 락
+            // 신청 가능한 Slot
+            LectureCapacity lectureCapacity = lectureCapacityService.getAvailableSlotLock(lecture.id());
             lectureApplyHistoryService.insertAppliedHistory(lecture, lectureApplyRequestDto.userId());
 
+            // 신청 가능 Slot - 1 >> 저장
             lectureCapacityService.applyAvailableSlot(lectureCapacity);
         } catch (RuntimeException e) {
             lectureApplyHistoryService.insertFailedHistory(lecture, lectureApplyRequestDto.userId());

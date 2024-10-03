@@ -14,5 +14,5 @@ public interface LectureRepository {
 
     List<Lecture> getAvailableLectures(LocalDate requestDate);
 
-    Lecture save(Lecture lecture);
+    void save(Lecture lecture);
 }

@@ -5,6 +5,7 @@ import hanghaeplus.signupforlecture.application.lecture.domain.repository.Lectur
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,7 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final LectureValidator lectureValidator;
 
+    @Transactional(readOnly = true)
     public List<Lecture> getAvailableLectures(LocalDate requestDate) {
         lectureValidator.validateDate(requestDate);
 
@@ -28,6 +30,7 @@ public class LectureService {
         return lectures;
     }
 
+    @Transactional(readOnly = true)
     public List<Lecture> findSignedUpLectures(List<Long> lectureIds) {
         lectureValidator.validateIds(lectureIds);
 

@@ -3,7 +3,6 @@ package hanghaeplus.signupforlecture.application.lecture.service;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecturer;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -69,5 +69,23 @@ class LectureServiceUnitTest {
         // then
         assertThat(results.get(0).title()).isEqualTo("제목1");
         assertThat(results.get(1).title()).isEqualTo("제목2");
+    }
+
+    @Test
+    @DisplayName("강의가 없으면 예외 발생")
+    void fail_getLecture() {
+
+        // given
+        Long lectureId = 1L;
+
+        when(lectureRepository.findById(lectureId)).thenReturn(Optional.empty());
+
+        // when
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
+            sut.getLecture(lectureId);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("등록된 강의가 아닙니다.");
     }
 }

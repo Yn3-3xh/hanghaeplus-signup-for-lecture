@@ -31,8 +31,8 @@ public class LectureRepositoryImpl implements LectureRepository {
     }
 
     @Override
-    public List<Lecture> findAvailableLectures(LocalDate requestDate) {
-        return lectureJpaRepository.findAvailableLectures(requestDate).stream()
+    public List<Lecture> getAvailableLectures(LocalDate requestDate) {
+        return lectureJpaRepository.getAvailableLectures(requestDate).stream()
                 .map(LectureEntity::toDomain)
                 .toList();
     }

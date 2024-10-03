@@ -15,5 +15,5 @@ public interface LectureJpaRepository extends CrudRepository<LectureEntity, Long
             "JOIN l.lectureCapacityEntity lc " +
             "WHERE l.availableDate = :requestDate " +
             "AND lc.availableSlot > 0")
-    List<LectureEntity> findAvailableLectures(@Param("requestDate") LocalDate requestDate);
+    List<LectureEntity> getAvailableLectures(@Param("requestDate") LocalDate requestDate);
 }

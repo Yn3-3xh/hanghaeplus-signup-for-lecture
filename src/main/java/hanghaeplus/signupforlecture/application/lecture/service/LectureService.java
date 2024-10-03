@@ -15,8 +15,9 @@ public class LectureService {
 
     private final LectureRepository lectureRepository;
 
-    public List<Lecture> findAvailableLectures(LocalDate requestDate) {
-        List<Lecture> lectures = lectureRepository.findAvailableLectures(requestDate);
+    public List<Lecture> getAvailableLectures(LocalDate requestDate) {
+
+        List<Lecture> lectures = lectureRepository.getAvailableLectures(requestDate);
         if (lectures.isEmpty()) {
             throw new NoSuchElementException("요청한 날짜에 신청 가능한 강의가 없습니다.");
         }
@@ -25,10 +26,12 @@ public class LectureService {
     }
 
     public List<Lecture> findSignedUpLectures(List<Long> lectureIds) {
-        return null;
+
+        return lectureRepository.findByIdIn(lectureIds);
     }
 
-    public void applyLecture(Long lectureId, Long aLong) {
-
+    public Lecture getLecture(Long lectureId) {
+        return lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new NoSuchElementException("등록된 강의가 아닙니다."));
     }
 }

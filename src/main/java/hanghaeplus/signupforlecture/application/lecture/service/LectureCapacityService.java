@@ -5,8 +5,10 @@ import hanghaeplus.signupforlecture.application.lecture.domain.repository.Lectur
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureCapacityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ public class LectureCapacityService {
     private final LectureCapacityRepository lectureCapacityRepository;
     private final LectureCapacityValidator lectureCapacityValidator;
 
+    @Transactional
     public LectureCapacity getAvailableSlotLock(Long lectureId) {
         lectureCapacityValidator.validateLectureId(lectureId);
 
@@ -25,10 +28,10 @@ public class LectureCapacityService {
     public void applyAvailableSlot(LectureCapacity lectureCapacity) {
         lectureCapacityValidator.validateLecture(lectureCapacity);
 
-        LectureCapacity capacity = lectureCapacity.decreaseAvailableSlot();
-        System.out.println("가나다");
-        System.out.println(capacity.availableSlot());
+//        Optional<LectureCapacity> test = lectureCapacityRepository.findById(lectureCapacity.lectureId());
+//        System.out.println("가가가 " + test.get().availableSlot());
 
+        LectureCapacity capacity = lectureCapacity.decreaseAvailableSlot();
         lectureCapacityRepository.save(capacity);
     }
 }

@@ -2,6 +2,7 @@ package hanghaeplus.signupforlecture.application.lecture.service;
 
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureApplyHistory;
+import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.enums.ApplyStatus;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureApplyHistoryRepository;
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureApplyHistoryValidator;

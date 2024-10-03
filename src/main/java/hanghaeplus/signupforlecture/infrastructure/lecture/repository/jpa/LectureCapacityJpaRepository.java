@@ -2,8 +2,10 @@ package hanghaeplus.signupforlecture.infrastructure.lecture.repository.jpa;
 
 import hanghaeplus.signupforlecture.infrastructure.lecture.entity.LectureCapacityEntity;
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 

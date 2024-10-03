@@ -3,6 +3,7 @@ package hanghaeplus.signupforlecture.application.lecture.service;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureCapacityRepository;
+import hanghaeplus.signupforlecture.application.lecture.validator.LectureCapacityValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,9 @@ class LectureCapacityServiceUnitTest {
     @Mock
     private LectureCapacityRepository lectureCapacityRepository;
 
+    @Mock
+    private LectureCapacityValidator lectureCapacityValidator;
+
     @Test
     @DisplayName("남은 자리가 없으면 예외발생")
     void fail_checkAvailableSlotTest() {
@@ -36,7 +40,7 @@ class LectureCapacityServiceUnitTest {
 
         // when
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-            sut.applyAvailableSlot(lectureId);
+            sut.getAvailableSlot(lectureId);
         });
 
         // then

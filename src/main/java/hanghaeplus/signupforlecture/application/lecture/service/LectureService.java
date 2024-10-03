@@ -2,6 +2,7 @@ package hanghaeplus.signupforlecture.application.lecture.service;
 
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureRepository;
+import hanghaeplus.signupforlecture.application.lecture.validator.LectureValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,10 @@ import java.util.NoSuchElementException;
 public class LectureService {
 
     private final LectureRepository lectureRepository;
+    private final LectureValidator lectureValidator;
 
     public List<Lecture> getAvailableLectures(LocalDate requestDate) {
+        lectureValidator.validateDate(requestDate);
 
         List<Lecture> lectures = lectureRepository.getAvailableLectures(requestDate);
         if (lectures.isEmpty()) {
@@ -26,11 +29,14 @@ public class LectureService {
     }
 
     public List<Lecture> findSignedUpLectures(List<Long> lectureIds) {
+        lectureValidator.validateIds(lectureIds);
 
         return lectureRepository.findByIdIn(lectureIds);
     }
 
     public Lecture getLecture(Long lectureId) {
+        lectureValidator.validateLectureId(lectureId);
+
         return lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new NoSuchElementException("등록된 강의가 아닙니다."));
     }

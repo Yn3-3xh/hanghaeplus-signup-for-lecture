@@ -1,6 +1,7 @@
 package hanghaeplus.signupforlecture.application.user.service;
 
 import hanghaeplus.signupforlecture.application.user.domain.repository.UserRepository;
+import hanghaeplus.signupforlecture.application.user.validator.UserValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,9 @@ class UserServiceUnitTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserValidator userValidator;
 
     @Test
     @DisplayName("유저가 없으면 예외발생")

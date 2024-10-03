@@ -1,18 +1,38 @@
 # 패키지 설계
 
 ```text
-└── lecture
-    ├── api
-    │   ├── controller
-    │   └── dto
-    ├── application
-    │   ├── facade
-    │   └── service
-    ├── domain
-    │   ├── model
+├── HanghaeplusSignupForLectureApplication.java
+├── api
+│   ├── controller
+│   └── dto
+│       ├── request
+│       └── response
+├── application
+│   ├── lecture
+│   │   ├── domain
+│   │   │   ├── model
+│   │   │   └── repository
+│   │   ├── dto
+│   │   │   ├── request
+│   │   │   └── response
+│   │   ├── facade
+│   │   ├── service
+│   │   └── validator
+│   └── user
+│       ├── domain
+│       │   ├── model
+│       │   └── repository
+│       ├── service
+│       └── validator
+└── infrastructure
+    ├── lecture
+    │   ├── entity
     │   └── repository
-    └── infrastructure
+    │       ├── impl
+    │       └── jpa
+    └── user
         ├── entity
         └── repository
+            ├── impl
             └── jpa
 ```

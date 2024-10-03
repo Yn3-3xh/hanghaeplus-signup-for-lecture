@@ -4,6 +4,7 @@ import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureApplyHistory;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.enums.ApplyStatus;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureApplyHistoryRepository;
+import hanghaeplus.signupforlecture.application.lecture.validator.LectureApplyHistoryValidator;
 import hanghaeplus.signupforlecture.application.user.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,10 @@ class LectureApplyHistoryServiceUnitTest {
     private LectureApplyHistoryService sut;
 
     @Mock
-    LectureApplyHistoryRepository lectureApplyHistoryRepository;
+    private LectureApplyHistoryRepository lectureApplyHistoryRepository;
+
+    @Mock
+    private LectureApplyHistoryValidator lectureApplyHistoryValidator;
 
     @Test
     @DisplayName("강의 중복 신청 시 예외발생")

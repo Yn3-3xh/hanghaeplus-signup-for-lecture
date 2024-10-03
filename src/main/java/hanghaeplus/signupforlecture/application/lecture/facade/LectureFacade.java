@@ -1,7 +1,7 @@
 package hanghaeplus.signupforlecture.application.lecture.facade;
 
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
-import hanghaeplus.signupforlecture.application.lecture.domain.model.enums.ApplyStatus;
+import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.dto.request.LectureApplyRequestDto;
 import hanghaeplus.signupforlecture.application.lecture.dto.request.LectureAvailableRequestDto;
 import hanghaeplus.signupforlecture.application.lecture.dto.response.LectureAvailableResponseDto;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -54,8 +53,11 @@ public class LectureFacade {
 
         try {
             lectureApplyHistoryService.checkApplyLectureHistory(lecture.id(), user.id());
-            lectureCapacityService.applyAvailableSlot(lecture.id());
+
+            LectureCapacity lectureCapacity = lectureCapacityService.getAvailableSlot(lecture.id());
             lectureApplyHistoryService.insertAppliedHistory(lecture, lectureApplyRequestDto.userId());
+
+            lectureCapacityService.applyAvailableSlot(lectureCapacity);
         } catch (RuntimeException e) {
             lectureApplyHistoryService.insertFailedHistory(lecture, lectureApplyRequestDto.userId());
         }

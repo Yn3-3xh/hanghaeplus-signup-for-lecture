@@ -3,6 +3,7 @@ package hanghaeplus.signupforlecture.application.lecture.service;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecturer;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureRepository;
+import hanghaeplus.signupforlecture.application.lecture.validator.LectureValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class LectureServiceUnitTest {
 
     @Mock
     private LectureRepository lectureRepository;
+
+    @Mock
+    private LectureValidator lectureValidator;
 
     @Test
     @DisplayName("요청된 날짜에 해당되는 강의가 없으면 예외발생")

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +34,8 @@ public class LectureFacade {
     private final LectureService lectureService;
     private final LectureApplyHistoryService lectureApplyHistoryService;
     private final LectureCapacityService lectureCapacityService;
+
+    private final ReentrantLock lock;
 
     public List<LectureAvailableResponseDto> getAvailableLectures(LectureAvailableRequestDto lectureAvailableRequestDto) {
         List<Lecture> availableLectures = lectureService.getAvailableLectures(lectureAvailableRequestDto.requestDate());
@@ -58,21 +61,29 @@ public class LectureFacade {
         User user = userService.getUser(lectureApplyRequestDto.userId());
         Lecture lecture = lectureService.getLecture(lectureId);
 
+//        lock.lock();
         try {
+            // 중복 체크 (history 테이블)
             lectureApplyHistoryService.checkApplyLectureHistory(lecture.id(), user.id());
 
-            // 신청 가능한 Slot
-            LectureCapacity lectureCapacity = lectureCapacityService.getAvailableSlotLock(lecture.id()); // 락 획득
-            // 30 30 30 30 > 29 29 29 29 29 >>>>>> ㅠㅠ gg
+            // 신청 가능한 Slot (lectureCapacity 테이블) 조회 <락 획득>
+            LectureCapacity lectureCapacity = lectureCapacityService.getAvailableSlotLock(lecture.id());
 
             System.out.println("Attempting to apply lecture, available slots: " + lectureCapacity.availableSlot());
+            // 30 30 30 30 > 29 29 29 29 29 >>>>>> ㅠㅠ gg
 
-            lectureApplyHistoryService.insertAppliedHistory(lecture, lectureApplyRequestDto.userId());
+            // 내역 저장 (history 테이블)
+            lectureApplyHistoryService.insertAppliedHistory(lecture, user.id());
 
-            // 신청 가능 Slot - 1 >> 저장
+            // 신청 가능 Slot - 1 로직 >> 저장 (lectureCapacity 테이블)
             lectureCapacityService.applyAvailableSlot(lectureCapacity);
-        } catch (RuntimeException e) {
-            lectureApplyHistoryService.insertFailedHistory(lecture, lectureApplyRequestDto.userId());
+            // 2명으로 했을때 update가 처음 한번만 나간다 > 왜 ㅡㅡ
+            // 40명으로 하면 40명 내역 저장 >> slot도 30 N개, 29 N개, ... 저장
+
+        } catch (Exception e) {
+            lectureApplyHistoryService.insertFailedHistory(lecture, user.id());
+        } finally {
+//            lock.unlock();
         }
     }
 }

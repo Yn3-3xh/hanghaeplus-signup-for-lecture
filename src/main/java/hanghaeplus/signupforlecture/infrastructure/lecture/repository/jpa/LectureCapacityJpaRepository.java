@@ -1,5 +1,6 @@
 package hanghaeplus.signupforlecture.infrastructure.lecture.repository.jpa;
 
+import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.infrastructure.lecture.entity.LectureCapacityEntity;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
@@ -18,4 +19,8 @@ public interface LectureCapacityJpaRepository extends CrudRepository<LectureCapa
             "WHERE lc.lectureId = :lectureId " +
             "AND lc.availableSlot > 0 ")
     Optional<LectureCapacityEntity> findByLectureIdGreaterThanZeroLock(@Param("lectureId") Long lectureId);
+
+//    @Override
+//    @Query("UPDATE ")
+//    void save(LectureCapacityEntity lectureCapacity)
 }

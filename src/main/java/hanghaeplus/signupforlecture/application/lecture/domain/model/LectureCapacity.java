@@ -15,7 +15,7 @@ public record LectureCapacity (
         if (afterAvailableSlot < 0) {
             throw new IllegalStateException("Slot을 신청할 수 없습니다.");
         }
-
+        System.out.println("QQQ " + afterAvailableSlot);
         return new LectureCapacity(id, lectureId, maxSlot, afterAvailableSlot);
     }
 

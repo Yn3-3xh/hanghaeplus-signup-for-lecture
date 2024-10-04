@@ -13,8 +13,10 @@ public interface LectureApplyHistoryJpaRepository extends CrudRepository<Lecture
 
     @Query("SELECT lah FROM LectureApplyHistoryEntity lah " +
             "JOIN lah.lectureEntity l " +
+//            "ON lah.lectureEntity.id = l.id " +
             "WHERE lah.userId = :userId " +
             "AND l.id = :lectureId " +
+//            "AND l.lecturerEntity.id = :lectureId " +
             "AND lah.applyStatusEntity = 'APPLIED'")
     Optional<LectureApplyHistoryEntity> findByLectureIdAndUserIdAndAppliedStatus(@Param("lectureId") Long lectureId, @Param("userId") Long userId);
 

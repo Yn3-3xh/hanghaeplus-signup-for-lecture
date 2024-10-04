@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -113,14 +114,18 @@ class LectureFacadeIntegrationTest {
             futures.add(future);
         }
         CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        allOf.join();
-//        RuntimeException exception = assertThrows(RuntimeException.class, allOf::join);
+//        allOf.join();
+        RuntimeException exception = assertThrows(RuntimeException.class, allOf::join);
 
         List<LectureApplyHistory> lectureApplyHistories = lectureApplyHistoryRepository.findByLectureIdAndAppliedStatus(lectureId);
+        Optional<LectureCapacity> resultCapacity = lectureCapacityRepository.findById(1L);
+
 
         // then
-//        assertThat(exception.getMessage()).isEqualTo("신청 가능한 Slot이 없습니다.");
+        assertThat(exception.getCause().getMessage()).isEqualTo("신청 가능한 Slot이 없습니다.");
         assertThat(lectureApplyHistories.size()).isEqualTo(30);
+//        assertThat(lectureApplyHistories.size()).isEqualTo(2);
+//        assertThat(resultCapacity.get().availableSlot()).isEqualTo(28);
 
     }
 

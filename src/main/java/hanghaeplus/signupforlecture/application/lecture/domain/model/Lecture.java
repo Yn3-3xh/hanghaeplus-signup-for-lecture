@@ -10,7 +10,8 @@ public record Lecture (
     Long id,
     String title,
     Lecturer lecturer,
-    LectureCapacity lectureCapacity,
+//    LectureCapacity lectureCapacity,
+    Long lectureCapacityId,
     LocalDate availableDate
 ) {
 }

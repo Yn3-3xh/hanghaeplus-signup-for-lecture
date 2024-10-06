@@ -14,4 +14,5 @@ public interface LectureApplyHistoryRepository {
 
     List<LectureApplyHistory> findByLectureIdAndAppliedStatus(Long lectureId);
 
+    List<LectureApplyHistory> findByLectureIdAndFailedStatus(Long lectureId);
 }

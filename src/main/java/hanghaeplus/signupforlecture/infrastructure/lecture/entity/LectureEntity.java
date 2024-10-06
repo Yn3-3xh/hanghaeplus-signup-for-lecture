@@ -23,9 +23,10 @@ public class LectureEntity extends AbstractAuditable {
     @JoinColumn(name = "lecturer_id", nullable = false)
     private LecturerEntity lecturerEntity;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "capacity_id")
-    private LectureCapacityEntity lectureCapacityEntity;
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "capacity_id")
+//    private LectureCapacityEntity lectureCapacityEntity;
+    private Long lectureCapacityId;
 
     private LocalDate availableDate;
 
@@ -34,7 +35,8 @@ public class LectureEntity extends AbstractAuditable {
                 .id(this.id)
                 .title(this.title)
                 .lecturer(this.lecturerEntity.toDomain())
-                .lectureCapacity(this.lectureCapacityEntity.toDomain())
+//                .lectureCapacity(this.lectureCapacityEntity.toDomain())
+                .lectureCapacityId(this.lectureCapacityId)
                 .availableDate(this.availableDate)
                 .build();
     }
@@ -44,7 +46,8 @@ public class LectureEntity extends AbstractAuditable {
         lectureEntity.id = lecture.id();
         lectureEntity.title = lecture.title();
         lectureEntity.lecturerEntity = LecturerEntity.fromDomain(lecture.lecturer());
-        lectureEntity.lectureCapacityEntity = LectureCapacityEntity.fromDomain(lecture.lectureCapacity());
+//        lectureEntity.lectureCapacityEntity = LectureCapacityEntity.fromDomain(lecture.lectureCapacity());
+        lectureEntity.lectureCapacityId = lecture.lectureCapacityId();
         lectureEntity.availableDate = lecture.availableDate();
 
         return lectureEntity;

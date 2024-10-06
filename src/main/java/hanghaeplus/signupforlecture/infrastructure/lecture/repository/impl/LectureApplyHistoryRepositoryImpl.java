@@ -41,4 +41,11 @@ public class LectureApplyHistoryRepositoryImpl implements LectureApplyHistoryRep
                 .map(LectureApplyHistoryEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<LectureApplyHistory> findByLectureIdAndFailedStatus(Long lectureId) {
+        return lectureApplyHistoryJpaRepository.findByLectureIdAndFailedStatus(lectureId).stream()
+                .map(LectureApplyHistoryEntity::toDomain)
+                .toList();
+    }
 }

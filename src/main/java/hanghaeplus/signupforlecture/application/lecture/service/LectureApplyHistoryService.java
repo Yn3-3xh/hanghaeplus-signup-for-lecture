@@ -47,6 +47,7 @@ public class LectureApplyHistoryService {
                 .userId(userId)
                 .applyStatus(ApplyStatus.APPLIED)
                 .build();
+        System.out.println("히스토리 성공?");
         lectureApplyHistoryRepository.save(history);
     }
 

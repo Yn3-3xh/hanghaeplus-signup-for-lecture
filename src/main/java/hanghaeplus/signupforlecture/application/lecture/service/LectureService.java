@@ -22,12 +22,12 @@ public class LectureService {
     public List<Lecture> getAvailableLectures(LocalDate requestDate) {
         lectureValidator.validateDate(requestDate);
 
-        List<Lecture> lectures = lectureRepository.getAvailableLectures(requestDate);
-        if (lectures.isEmpty()) {
+        List<Lecture> availableLectures = lectureRepository.findByAvailableDateOrderById(requestDate);
+        if (availableLectures.isEmpty()) {
             throw new NoSuchElementException("요청한 날짜에 신청 가능한 강의가 없습니다.");
         }
 
-        return lectures;
+        return availableLectures;
     }
 
     @Transactional(readOnly = true)

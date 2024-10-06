@@ -8,18 +8,18 @@ public record LectureSignedUpResponse(
         Long lectureId,
         String title,
         String lecturerName,
-        LocalDate availableDate,
-        int maxSlot,
-        int availableSlot
+        LocalDate availableDate
+//        int maxSlot,
+//        int availableSlot
 ) {
     public static LectureSignedUpResponse fromDto(LectureSignedUpResponseDto lectureSignedUpResponseDto) {
         return new LectureSignedUpResponse(
                 lectureSignedUpResponseDto.lectureId(),
                 lectureSignedUpResponseDto.title(),
                 lectureSignedUpResponseDto.lecturerName(),
-                lectureSignedUpResponseDto.availableDate(),
-                lectureSignedUpResponseDto.maxSlot(),
-                lectureSignedUpResponseDto.availableSlot()
+                lectureSignedUpResponseDto.availableDate()
+//                lectureSignedUpResponseDto.maxSlot(),
+//                lectureSignedUpResponseDto.availableSlot()
         );
     }
 }

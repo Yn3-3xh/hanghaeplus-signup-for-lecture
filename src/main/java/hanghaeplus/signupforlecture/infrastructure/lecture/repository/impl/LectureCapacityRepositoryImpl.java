@@ -7,6 +7,7 @@ import hanghaeplus.signupforlecture.infrastructure.lecture.repository.jpa.Lectur
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +20,13 @@ public class LectureCapacityRepositoryImpl implements LectureCapacityRepository 
     public Optional<LectureCapacity> findById(Long lectureId) {
         return lectureCapacityJpaRepository.findById(lectureId)
                 .map(LectureCapacityEntity::toDomain);
+    }
+
+    @Override
+    public List<LectureCapacity> findByLectureIdInOrderByLectureId(List<Long> lectureIds) {
+        return lectureCapacityJpaRepository.findByLectureIdInOrderByLectureId(lectureIds).stream()
+                .map(LectureCapacityEntity::toDomain)
+                .toList();
     }
 
     @Override

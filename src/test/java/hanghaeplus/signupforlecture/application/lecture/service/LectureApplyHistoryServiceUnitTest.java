@@ -42,7 +42,8 @@ class LectureApplyHistoryServiceUnitTest {
                 .id(lectureId)
                 .title("")
                 .lecturer(null)
-                .lectureCapacity(null)
+                .lectureCapacityId(null)
+//                .lectureCapacity(null)
                 .availableDate(null)
                 .build();
         LectureApplyHistory givenLectureApplyHistory = LectureApplyHistory.builder()

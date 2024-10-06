@@ -11,9 +11,5 @@ import java.util.List;
 public interface LectureJpaRepository extends CrudRepository<LectureEntity, Long> {
     List<LectureEntity> findByIdIn(List<Long> ids);
 
-    @Query("SELECT l FROM LectureEntity l " +
-            "JOIN l.lectureCapacityEntity lc " +
-            "WHERE l.availableDate = :requestDate " +
-            "AND lc.availableSlot > 0")
-    List<LectureEntity> getAvailableLectures(@Param("requestDate") LocalDate requestDate);
+    List<LectureEntity> findByAvailableDateOrderById(LocalDate requestDate);
 }

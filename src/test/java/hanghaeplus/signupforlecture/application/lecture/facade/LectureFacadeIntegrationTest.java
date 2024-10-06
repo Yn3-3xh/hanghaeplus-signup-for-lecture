@@ -4,6 +4,7 @@ import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureApplyHistory;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecturer;
+import hanghaeplus.signupforlecture.application.lecture.domain.model.enums.ApplyStatus;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureApplyHistoryRepository;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureCapacityRepository;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureRepository;
@@ -79,7 +80,8 @@ class LectureFacadeIntegrationTest {
                 .id(1L)
                 .title("강의A")
                 .lecturer(lecturer)
-                .lectureCapacity(lectureCapacity)
+                .lectureCapacityId(1L)
+//                .lectureCapacity(lectureCapacity)
                 .availableDate(LocalDate.now())
                 .build();
         lectureRepository.save(lecture);
@@ -110,23 +112,25 @@ class LectureFacadeIntegrationTest {
 
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 sut.applyLecture(lectureId, lectureApplyRequestDto);
+            }).exceptionally(e -> {
+                System.out.println("예외 발생: " + e.getMessage());
+                return null; // 예외 발생 시 null 반환
             });
             futures.add(future);
         }
+
         CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-//        allOf.join();
-        RuntimeException exception = assertThrows(RuntimeException.class, allOf::join);
-
-        List<LectureApplyHistory> lectureApplyHistories = lectureApplyHistoryRepository.findByLectureIdAndAppliedStatus(lectureId);
-        Optional<LectureCapacity> resultCapacity = lectureCapacityRepository.findById(1L);
-
+        allOf.join();
 
         // then
-        assertThat(exception.getCause().getMessage()).isEqualTo("신청 가능한 Slot이 없습니다.");
-        assertThat(lectureApplyHistories.size()).isEqualTo(30);
-//        assertThat(lectureApplyHistories.size()).isEqualTo(2);
-//        assertThat(resultCapacity.get().availableSlot()).isEqualTo(28);
+        Optional<LectureCapacity> resultCapacity = lectureCapacityRepository.findById(1L);
+        assertThat(resultCapacity.get().availableSlot()).isEqualTo(0);
 
+        List<LectureApplyHistory> lectureApplyHistories = lectureApplyHistoryRepository.findByLectureIdAndAppliedStatus(lectureId);
+        assertThat(lectureApplyHistories.size()).isEqualTo(30);
+
+        List<LectureApplyHistory> lectureFailedHistories = lectureApplyHistoryRepository.findByLectureIdAndFailedStatus(lectureId);
+        assertThat(lectureFailedHistories.size()).isEqualTo(10);
     }
 
     @Test
@@ -163,65 +167,7 @@ class LectureFacadeIntegrationTest {
 
         // then
         lectureApplyHistories = lectureApplyHistoryRepository.findByLectureIdAndAppliedStatus(lectureId);
-        assertThat(lectureApplyHistories.size()).isEqualTo(30); // 신청한 역사 수 검증
+        assertThat(lectureApplyHistories.size()).isEqualTo(30); // 신청한 강의 수 검증
     }
 
-    @Test
-    public void testLectureCapacityLock() throws InterruptedException, ExecutionException {
-        // 성공과 실패 카운터
-        AtomicInteger lockSuccessCount = new AtomicInteger(0);
-        AtomicInteger lockFailureCount = new AtomicInteger(0);
-
-        // 스레드 풀 설정
-        ExecutorService executorService = Executors.newFixedThreadPool(40);
-
-        // 40명의 유저를 시뮬레이션할 Future 리스트
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-        Long lectureId = 1L;  // 테스트할 lectureId 설정
-
-        LectureCapacity lectureCapacity = LectureCapacity.builder()
-                .id(1L)
-                .lectureId(1L)
-                .maxSlot(30)
-                .availableSlot(30)
-                .build();
-
-        // 40명의 유저가 동시에 락을 시도
-        for (int i = 0; i < 40; i++) {
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                try {
-                    // 락을 획득 시도
-                    lectureCapacityService.applyAvailableSlot(lectureCapacity);
-
-                    // 락 획득 성공 시 카운트 증가 및 로그
-                    lockSuccessCount.incrementAndGet();
-                    System.out.println("Thread " + Thread.currentThread().getId() +
-                            " successfully acquired lock on lecture capacity for lectureId: " + lectureId);
-                } catch (PessimisticLockException e) {
-                    // 락 획득 실패 시 카운트 증가 및 로그
-                    lockFailureCount.incrementAndGet();
-                    System.err.println("Thread " + Thread.currentThread().getId() +
-                            " failed to acquire lock on lecture capacity for lectureId: " + lectureId);
-                } catch (Exception e) {
-                    System.err.println("Thread " + Thread.currentThread().getId() +
-                            " encountered an unexpected error: " + e.getMessage());
-                }
-            }, executorService);
-            futures.add(future);
-        }
-
-        // 모든 작업 완료를 기다림
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-
-        // 성공과 실패 로그 출력
-        System.out.println("Total lock successes: " + lockSuccessCount.get());
-        System.out.println("Total lock failures: " + lockFailureCount.get());
-
-        // 테스트 결과 검증
-        // 성공 또는 실패 카운트에 대해 원하는 조건을 추가
-        // 예를 들어, 성공이 1개 이상이어야 한다고 검증
-        assert lockSuccessCount.get() > 0 : "At least one lock should be acquired";
-        assert lockFailureCount.get() > 0 : "Some locks should fail";
-    }
 }

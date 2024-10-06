@@ -1,8 +1,11 @@
 package hanghaeplus.signupforlecture.application.lecture.dto.response;
 
 import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
+import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public record LectureAvailableResponseDto(
     Long lectureId,
@@ -12,14 +15,18 @@ public record LectureAvailableResponseDto(
     int maxSlot,
     int availableSlot
 ) {
-    public static LectureAvailableResponseDto fromDomain(Lecture lecture) {
-        return new LectureAvailableResponseDto(
-                lecture.id(),
-                lecture.title(),
-                lecture.lecturer().name(),
-                lecture.availableDate(),
-                lecture.lectureCapacity().maxSlot(),
-                lecture.lectureCapacity().availableSlot()
-        );
+    public static List<LectureAvailableResponseDto> fromDomains(List<Lecture> lectures, List<LectureCapacity> lectureCapacities) {
+        return IntStream.range(0, lectures.size())
+                .mapToObj(i ->
+                        new LectureAvailableResponseDto(
+                                lectures.get(i).id(),
+                                lectures.get(i).title(),
+                                lectures.get(i).lecturer().name(),
+                                lectures.get(i).availableDate(),
+                                lectureCapacities.get(i).maxSlot(),
+                                lectureCapacities.get(i).availableSlot()
+                        )
+                )
+                .toList();
     }
 }

@@ -1,7 +1,11 @@
 package hanghaeplus.signupforlecture.infrastructure.lecture.repository.jpa;
 
 import hanghaeplus.signupforlecture.infrastructure.lecture.entity.LectureApplyHistoryEntity;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -13,16 +17,13 @@ public interface LectureApplyHistoryJpaRepository extends CrudRepository<Lecture
 
     @Query("SELECT lah FROM LectureApplyHistoryEntity lah " +
             "JOIN lah.lectureEntity l " +
-//            "ON lah.lectureEntity.id = l.id " +
-            "WHERE lah.userId = :userId " +
-            "AND l.id = :lectureId " +
-//            "AND l.lecturerEntity.id = :lectureId " +
+            "WHERE l.id = :lectureId " +
             "AND lah.applyStatusEntity = 'APPLIED'")
-    Optional<LectureApplyHistoryEntity> findByLectureIdAndUserIdAndAppliedStatus(@Param("lectureId") Long lectureId, @Param("userId") Long userId);
+    List<LectureApplyHistoryEntity> findByLectureIdAndAppliedStatus(@Param("lectureId") Long lectureId);
 
     @Query("SELECT lah FROM LectureApplyHistoryEntity lah " +
             "JOIN lah.lectureEntity l " +
             "WHERE l.id = :lectureId " +
-            "AND lah.applyStatusEntity = 'APPLIED'")
-    List<LectureApplyHistoryEntity> findByLectureIdAndAppliedStatus(@Param("lectureId") Long lectureId);
+            "AND lah.applyStatusEntity = 'FAILED'")
+    List<LectureApplyHistoryEntity> findByLectureIdAndFailedStatus(@Param("lectureId") Long lectureId);
 }

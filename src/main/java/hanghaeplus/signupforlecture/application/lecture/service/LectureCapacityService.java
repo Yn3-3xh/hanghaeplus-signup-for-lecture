@@ -1,5 +1,6 @@
 package hanghaeplus.signupforlecture.application.lecture.service;
 
+import hanghaeplus.signupforlecture.application.lecture.domain.model.Lecture;
 import hanghaeplus.signupforlecture.application.lecture.domain.model.LectureCapacity;
 import hanghaeplus.signupforlecture.application.lecture.domain.repository.LectureCapacityRepository;
 import hanghaeplus.signupforlecture.application.lecture.validator.LectureCapacityValidator;
@@ -7,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,6 @@ public class LectureCapacityService {
     private final LectureCapacityRepository lectureCapacityRepository;
     private final LectureCapacityValidator lectureCapacityValidator;
 
-    @Transactional
     public LectureCapacity getAvailableSlotLock(Long lectureId) {
         lectureCapacityValidator.validateLectureId(lectureId);
 
@@ -33,5 +33,13 @@ public class LectureCapacityService {
 
         LectureCapacity capacity = lectureCapacity.decreaseAvailableSlot();
         lectureCapacityRepository.save(capacity);
+    }
+
+    public List<LectureCapacity> getAvailableSlot(List<Lecture> availableLectureIds) {
+
+        List<Long> lectureIds = availableLectureIds.stream()
+                .map(Lecture::id)
+                .toList();
+        return lectureCapacityRepository.findByLectureIdInOrderByLectureId(lectureIds);
     }
 }

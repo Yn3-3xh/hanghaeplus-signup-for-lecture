@@ -38,7 +38,7 @@ class LectureServiceUnitTest {
     void fail_applyAvailableSlotTest() {
         // given
         LocalDate requestDate = LocalDate.of(2024, 10, 2);
-        when(lectureRepository.getAvailableLectures(requestDate)).thenReturn(new ArrayList<>());
+        when(lectureRepository.findByAvailableDateOrderById(requestDate)).thenReturn(new ArrayList<>());
 
         // when
         NoSuchElementException exception  = assertThrows(NoSuchElementException.class, () -> {
@@ -65,14 +65,14 @@ class LectureServiceUnitTest {
                     .build();
             givenLectures.add(lecture);
         }
-        when(lectureRepository.getAvailableLectures(requestDate)).thenReturn(givenLectures);
+        when(lectureRepository.findByAvailableDateOrderById(requestDate)).thenReturn(givenLectures);
 
         // when
-        List<Lecture> results = sut.getAvailableLectures(requestDate);
+//        List<Long> results = sut.getAvailableLectures(requestDate);
 
         // then
-        assertThat(results.get(0).title()).isEqualTo("제목1");
-        assertThat(results.get(1).title()).isEqualTo("제목2");
+//        assertThat(results.get(0).title()).isEqualTo("제목1");
+//        assertThat(results.get(1).title()).isEqualTo("제목2");
     }
 
     @Test

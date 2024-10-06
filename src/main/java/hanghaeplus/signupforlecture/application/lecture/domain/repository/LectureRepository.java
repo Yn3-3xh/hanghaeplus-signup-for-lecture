@@ -12,7 +12,7 @@ public interface LectureRepository {
 
     List<Lecture> findByIdIn(List<Long> ids);
 
-    List<Lecture> getAvailableLectures(LocalDate requestDate);
+    List<Lecture> findByAvailableDateOrderById(LocalDate requestDate);
 
     void save(Lecture lecture);
 }

@@ -170,4 +170,58 @@ class LectureFacadeIntegrationTest {
         assertThat(lectureApplyHistories.size()).isEqualTo(30); // 신청한 강의 수 검증
     }
 
+    @Test
+    @DisplayName("한 유저가 같은 강의에 5번 신청한 경우 예외발생")
+    void fail_applyLecture3() {
+        // given
+        Long userId = 1L;
+        Long lectureId = 1L;
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        // 강사, 강의, 신청 내역 생성 (H2는 gap lock이 없기 때문)
+        Lecturer lecturer = Lecturer.builder()
+                .id(1L)
+                .name("강사A")
+                .build();
+        Lecture lecture = Lecture.builder()
+                .id(lectureId)
+                .title("강의A")
+                .lecturer(lecturer)
+                .lectureCapacityId(1L)
+//                .lectureCapacity(lectureCapacity)
+                .availableDate(LocalDate.now())
+                .build();
+        LectureApplyHistory lectureApplyHistory = LectureApplyHistory.builder()
+                .id(1L)
+                .lecture(lecture)
+                .userId(userId)
+                .applyStatus(ApplyStatus.APPLIED)
+                .build();
+        lectureApplyHistoryRepository.save(lectureApplyHistory);
+
+        // when
+        for (int i = 1; i <= 5; i++) {
+            LectureApplyRequestDto lectureApplyRequestDto = LectureApplyRequestDto.builder()
+                    .userId(userId)
+                    .build();
+
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                sut.applyLecture(lectureId, lectureApplyRequestDto);
+            }).exceptionally(e -> {
+                System.out.println("예외 발생: " + e.getMessage());
+                return null; // 예외 발생 시 null 반환
+            });
+            futures.add(future);
+        }
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        allOf.join();
+
+        // then
+        List<LectureApplyHistory> lectureApplyHistories = lectureApplyHistoryRepository.findByLectureIdAndAppliedStatus(lectureId);
+        assertThat(lectureApplyHistories.size()).isEqualTo(1);
+
+        List<LectureApplyHistory> lectureFailedHistories = lectureApplyHistoryRepository.findByLectureIdAndFailedStatus(lectureId);
+        assertThat(lectureFailedHistories.size()).isEqualTo(5);
+    }
 }
